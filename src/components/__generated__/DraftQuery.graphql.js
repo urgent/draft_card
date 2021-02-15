@@ -8,23 +8,25 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type TableQueryVariables = {||};
-export type TableQueryResponse = {|
+export type DraftQueryVariables = {||};
+export type DraftQueryResponse = {|
   +teams: $ReadOnlyArray<{|
+    +team_id: number,
     +name: string,
     +logo: string,
   |}>
 |};
-export type TableQuery = {|
-  variables: TableQueryVariables,
-  response: TableQueryResponse,
+export type DraftQuery = {|
+  variables: DraftQueryVariables,
+  response: DraftQueryResponse,
 |};
 */
 
 
 /*
-query TableQuery {
+query DraftQuery {
   teams {
+    team_id
     name
     logo
   }
@@ -41,6 +43,13 @@ var v0 = [
     "name": "teams",
     "plural": true,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "team_id",
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -64,7 +73,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TableQuery",
+    "name": "DraftQuery",
     "selections": (v0/*: any*/),
     "type": "query_root",
     "abstractKey": null
@@ -73,20 +82,20 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "TableQuery",
+    "name": "DraftQuery",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "0de9c5b1902b061d2a69f10e8aa77af3",
+    "cacheID": "661fe3f78e41409a19d50b6c2e64a8ed",
     "id": null,
     "metadata": {},
-    "name": "TableQuery",
+    "name": "DraftQuery",
     "operationKind": "query",
-    "text": "query TableQuery {\n  teams {\n    name\n    logo\n  }\n}\n"
+    "text": "query DraftQuery {\n  teams {\n    team_id\n    name\n    logo\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '699cfbbb748353b384cfdaf33601f1f0';
+(node/*: any*/).hash = '6a33728e9207762b1ba2bb9817d1de42';
 
 module.exports = node;

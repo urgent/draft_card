@@ -1,5 +1,5 @@
 import "./App.css";
-import { Table } from "./components/Table";
+import { Draft } from "./components/Draft";
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <h1>Draft Card</h1>
       </header>
       <main>
-        <Table />
+        <Draft />
       </main>
     </div>
   );
