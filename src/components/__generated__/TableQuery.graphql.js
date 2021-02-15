@@ -10,7 +10,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type TableQueryVariables = {||};
 export type TableQueryResponse = {|
-  +team: $ReadOnlyArray<{|
+  +teams: $ReadOnlyArray<{|
     +name: string,
     +logo: string,
   |}>
@@ -24,7 +24,7 @@ export type TableQuery = {|
 
 /*
 query TableQuery {
-  team {
+  teams {
     name
     logo
   }
@@ -36,9 +36,9 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "team",
+    "concreteType": "teams",
     "kind": "LinkedField",
-    "name": "team",
+    "name": "teams",
     "plural": true,
     "selections": [
       {
@@ -77,16 +77,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "39b92fa89028de512506f684543eb6ff",
+    "cacheID": "0de9c5b1902b061d2a69f10e8aa77af3",
     "id": null,
     "metadata": {},
     "name": "TableQuery",
     "operationKind": "query",
-    "text": "query TableQuery {\n  team {\n    name\n    logo\n  }\n}\n"
+    "text": "query TableQuery {\n  teams {\n    name\n    logo\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'b76970ab966a77531266834c200b86d4';
+(node/*: any*/).hash = '699cfbbb748353b384cfdaf33601f1f0';
 
 module.exports = node;

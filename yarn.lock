@@ -1838,6 +1838,14 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-relay@^7.0.17":
+  version "7.0.17"
+  resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-7.0.17.tgz#83f6b85c41b5fd3bb27d04d759fa4c0e4dd6a8d4"
+  integrity sha512-cJqOFIbp3M3/QkRpxlL4pwWRWB0lPGHevJFW8unuebkkITre8ptgknkGhAKe5IlA6ENTRJqVQXMuNdyLxl+0cQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/relay-runtime" "*"
+
 "@types/react@*", "@types/react@^17.0.2":
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
@@ -1846,7 +1854,7 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/relay-runtime@^10.1.8":
+"@types/relay-runtime@*", "@types/relay-runtime@^10.1.8":
   version "10.1.8"
   resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.8.tgz#dc60ca3332693b952e5e2871718320a2377b466e"
   integrity sha512-8oZA8RGHD7590ObCt0aWZSWIS5GYwcJIp70FovVu9mIHP7rmpVH2u0y29nJZ5TuSEbPNz6zy09IBMWjaHMruZg==
