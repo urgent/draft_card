@@ -55,12 +55,7 @@ export function Draft() {
           />
         );
 
-        return (
-          <div style={{ height: 400, width: "100%" }}>
-            Team: {teams[0].name}
-            {grid}
-          </div>
-        );
+        return <div style={{ height: 400, width: "100%" }}>{grid}</div>;
       }}
     />
   );
