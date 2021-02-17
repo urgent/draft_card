@@ -2,7 +2,7 @@ import { fetchQuery } from "./Environment"
 
 const operation = {
     text: `query {
-        team_by_pk(team_id:1) {
+        teams_by_pk(team_id:1) {
             team_id
         }
     }`
@@ -10,7 +10,7 @@ const operation = {
 
 const result = {
     "data": {
-        "team_by_pk": {
+        "teams_by_pk": {
             "team_id": 1
         }
     }
