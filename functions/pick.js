@@ -14,6 +14,18 @@ const DraftQuery = `query DraftQuery($draftID: Int!) {
   }
 }`;
 
+const DraftMutation = `
+mutation DraftMutation($draftID: Int!, $picks: jsonb ) {
+  update_drafts_by_pk (
+    pk_columns: {id: $draftID}
+    _set: { picks: $picks }
+  ) {
+    id
+    picks
+  }
+}
+`;
+
 function validatePOST(event) {
   if (typeof event !== 'object') {
     return false;
@@ -181,8 +193,10 @@ exports.handler = async function (event, context) {
     };
   }
 
+
+  const mutation = await graphql.fetchQuery(DraftMutation, { draftID: parseInt(event.body.draft), picks: [...draft.picks, event.body.team] })
   return {
     statusCode: 200,
-    body: JSON.stringify({ data: draft })
+    body: JSON.stringify({ data: mutation.data.update_drafts_by_pk })
   };
 }

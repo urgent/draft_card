@@ -6,5 +6,5 @@ test('Serverless graphql works', async () => {
           name
         }
       }`)
-  expect(payload).toEqual({ "data": { "teams": [{ "name": "Boston Celtics" }, { "name": "Brooklyn Nets" }] } });
+  expect(payload).toEqual({ "data": { "teams": [{ "name": "Boston Celtics" }, { "name": "Brooklyn Nets" }, { "name": "New York Knicks" }] } });
 })

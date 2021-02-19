@@ -57,15 +57,6 @@ test('Pick errors on not current user', async () => {
     const response2 = await handler({ body: { username: "AAA", draft: 4, team: 'Brooklyn Nets' } });
     const json2 = JSON.parse(response2.body)
     expect(json2).toEqual({ error: 'Invalid request' });
-
-})
-
-test('Pick works for ready to pick user', async () => {
-    const response = await handler({ body: { username: "AAA", draft: 3, team: 'Boston Celtics' } });
-    expect(response.statusCode).toEqual(200);
-    // Run for draft that has picks
-    const response2 = await handler({ body: { username: "BBB", draft: 4, team: 'Brooklyn Nets' } });
-    expect(response2.statusCode).toEqual(200);
 })
 
 test('Pick errors on draft slots exceeded', async () => {
@@ -78,4 +69,12 @@ test('Pick errors if team is already drafted', async () => {
     const response = await handler({ body: { username: "BBB", draft: 4, team: 'Boston Celtics' } });
     const json = JSON.parse(response.body)
     expect(json).toEqual({ error: 'Invalid request' });
+})
+
+test('Pick works for ready to pick user', async () => {
+    const response = await handler({ body: { username: "AAA", draft: 3, team: 'Boston Celtics' } });
+    expect(response.statusCode).toEqual(200);
+    // Run for draft that has picks
+    const response2 = await handler({ body: { username: "BBB", draft: 4, team: 'Brooklyn Nets' } });
+    expect(response2.statusCode).toEqual(200);
 })
