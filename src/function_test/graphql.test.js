@@ -1,10 +1,10 @@
-import { fetchQuery } from '../../netlify/includes/graphql';
+import { fetchQuery } from '../../functions/graphql';
 
 test('Serverless graphql works', async () => {
-    const payload = await fetchQuery(`query MyQuery {
+  const payload = await fetchQuery(`query MyQuery {
         teams {
           name
         }
       }`)
-    expect(payload).toEqual({ "data": { "teams": [{ "name": "Boston Celtics" }, { "name": "Brooklyn Nets" }] } });
+  expect(payload).toEqual({ "data": { "teams": [{ "name": "Boston Celtics" }, { "name": "Brooklyn Nets" }] } });
 })
