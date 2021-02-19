@@ -9,6 +9,9 @@ const DraftQuery = `query DraftQuery($draftID: Int!) {
     rounds
     picks
   }
+  teams{
+    name
+  }
 }`;
 
 function validatePOST(event) {
@@ -33,7 +36,12 @@ function validatePOST(event) {
   if (!parseInt(event.body.draft) > 0) {
     return false;
   }
-
+  if (!event.body.hasOwnProperty('team')) {
+    return false;
+  }
+  if (event.body.team === undefined || event.body.team.length < 3) {
+    return false;
+  }
   return true;
 }
 
@@ -59,19 +67,23 @@ function validatePayload(payload) {
     return false;
   }
   // draft has rounds
-  if (payload.data.drafts_by_pk.rounds <= 1) {
+  if (payload.data.drafts_by_pk.rounds < 1) {
     return false;
   }
   return true;
 }
 
-function processDraft(draft) {
+function processDraft(data) {
+  const draft = data.drafts_by_pk;
   draft.countPlayers = draft.draft_order.length;
   draft.countPicks = draft.picks.length;
   draft.maxPicks = draft.countPlayers * draft.rounds;
   // picks can be made early.
   draft.maxSeconds = draft.maxPicks * draft.interval;
   draft.validatedOn = Math.floor(new Date().getTime() / 1000);
+  draft.teamsAvailable = data.teams.map(team => team.name);
+  draft.currentPickIndex = draft.countPicks % draft.countPlayers;
+  draft.currentUser = draft.draft_order[draft.currentPickIndex]
   return draft;
 }
 
@@ -84,8 +96,22 @@ function validateDraft(draft) {
 }
 
 function authenticate(event, draft) {
-  // authenticate, is username in draft order
+  // is username in draft order
   if (!draft.draft_order.includes(event.body.username)) {
+    return false;
+  }
+  // is payload team in teams
+  if (!draft.teamsAvailable.includes(event.body.team)) {
+    return false;
+  }
+  return true;
+}
+
+function authorize(event, draft) {
+  if (draft.currentUser !== event.body.username) {
+    return false;
+  }
+  if (draft.picks.includes(event.body.team)) {
     return false;
   }
   return true;
@@ -102,7 +128,7 @@ function validateTimestamps(draft) {
   if (draft.timestamp < 1577854800) {
     return false;
   }
-  if (draft.validatedOn >= draft.maxEnding) {
+  if (draft.timestamp < draft.validatedOn) {
     return false;
   }
   return true;
@@ -125,7 +151,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  let draft = processDraft(payload.data.drafts_by_pk);
+  let draft = processDraft(payload.data);
   if (!validateDraft(draft)) {
     return {
       statusCode: 500,
@@ -134,6 +160,13 @@ exports.handler = async function (event, context) {
   }
 
   if (!authenticate(event, draft)) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Invalid request" })
+    };
+  }
+
+  if (!authorize(event, draft)) {
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Invalid request" })

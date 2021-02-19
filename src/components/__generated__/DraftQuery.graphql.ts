@@ -1,26 +1,21 @@
-/**
- * @flow
- */
-
+/* tslint:disable */
 /* eslint-disable */
+// @ts-nocheck
 
-'use strict';
+import { ConcreteRequest } from "relay-runtime";
+export type DraftQueryVariables = {};
+export type DraftQueryResponse = {
+    readonly teams: ReadonlyArray<{
+        readonly team_id: number;
+        readonly name: string;
+        readonly logo: string;
+    }>;
+};
+export type DraftQuery = {
+    readonly response: DraftQueryResponse;
+    readonly variables: DraftQueryVariables;
+};
 
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type DraftQueryVariables = {||};
-export type DraftQueryResponse = {|
-  +teams: $ReadOnlyArray<{|
-    +team_id: number,
-    +name: string,
-    +logo: string,
-  |}>
-|};
-export type DraftQuery = {|
-  variables: DraftQueryVariables,
-  response: DraftQueryResponse,
-|};
-*/
 
 
 /*
@@ -33,7 +28,7 @@ query DraftQuery {
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "alias": null,
@@ -95,7 +90,5 @@ return {
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = '6a33728e9207762b1ba2bb9817d1de42';
-
-module.exports = node;
+(node as any).hash = '6a33728e9207762b1ba2bb9817d1de42';
+export default node;
