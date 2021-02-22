@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 
 exports.fetchQuery = function (query, variables) {
-    return fetch("https://draftcard.hasura.app/v1/graphql", {
+    return fetch("https://draftcard.hasura.app/v1beta1/relay", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

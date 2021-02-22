@@ -1,16 +1,27 @@
 const graphql = require('./graphql')
 
-const DraftQuery = `query DraftQuery($draftID: Int!) {
-  drafts_by_pk(id:$draftID) {
-    id
-    start
-    draft_order
-    interval
-    rounds
-    picks
+const DraftQuery = `query DraftQuery($draftID:Int!) {
+  drafts_connection(where: {id: {_eq: $draftID}}) {
+    edges {
+      node {
+        id
+        start
+        draft_order
+        interval
+        rounds
+        picks
+      }
+    }
   }
-  teams{
-    name
+  teams_connection {
+    edges {
+      node {
+        logo
+        name
+        team_id
+        id
+      }
+    }
   }
 }`;
 
@@ -61,39 +72,39 @@ function validatePayload(payload) {
   if (!payload.hasOwnProperty('data')) {
     return false;
   }
-  if (!payload.data.hasOwnProperty('drafts_by_pk')) {
+  if (!payload.data.hasOwnProperty('drafts_connection')) {
     return false;
   }
-  if (!payload.data.drafts_by_pk.hasOwnProperty('draft_order')) {
+  if (!payload.data.drafts_connection.edges[0].node.hasOwnProperty('draft_order')) {
     return false;
   }
-  if (typeof payload.data.drafts_by_pk.draft_order === 'undefined') {
+  if (typeof payload.data.drafts_connection.edges[0].node.draft_order === 'undefined') {
     return false;
   }
   // draft has players
-  if (payload.data.drafts_by_pk.draft_order.length <= 0) {
+  if (payload.data.drafts_connection.edges[0].node.draft_order.length <= 0) {
     return false;
   }
   // draft has interval
-  if (payload.data.drafts_by_pk.interval <= 15) {
+  if (payload.data.drafts_connection.edges[0].node.interval <= 15) {
     return false;
   }
   // draft has rounds
-  if (payload.data.drafts_by_pk.rounds < 1) {
+  if (payload.data.drafts_connection.edges[0].node.rounds < 1) {
     return false;
   }
   return true;
 }
 
 function processDraft(data) {
-  const draft = data.drafts_by_pk;
+  const draft = data.drafts_connection.edges[0].node;
   draft.countPlayers = draft.draft_order.length;
   draft.countPicks = draft.picks.length;
   draft.maxPicks = draft.countPlayers * draft.rounds;
   // picks can be made early.
   draft.maxSeconds = draft.maxPicks * draft.interval;
   draft.validatedOn = Math.floor(new Date().getTime() / 1000);
-  draft.teamsAvailable = data.teams.map(team => team.name);
+  draft.teamsAvailable = data.teams_connection.edges.map(edge => edge.node.name);
   draft.currentPickIndex = draft.countPicks % draft.countPlayers;
   draft.currentUser = draft.draft_order[draft.currentPickIndex]
   return draft;

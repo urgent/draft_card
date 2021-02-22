@@ -1,18 +1,69 @@
 import React from "react";
 import { graphql } from "babel-plugin-relay/macro";
-import { QueryRenderer } from "react-relay";
+import { QueryRenderer, requestSubscription } from "react-relay";
 import { environment } from "../relay/Environment";
 import { DataGrid, ValueFormatterParams } from "@material-ui/data-grid";
 
 const DraftQuery = graphql`
-  query DraftQuery {
-    teams {
-      team_id
-      name
-      logo
+  query DraftQuery($draftID: Int!) {
+    teams_connection {
+      edges {
+        node {
+          logo
+          name
+          team_id
+          id
+        }
+      }
+    }
+    drafts_connection(where: { id: { _eq: $draftID } }) {
+      edges {
+        node {
+          draft_order
+          id
+          interval
+          picks
+          rounds
+          start
+        }
+      }
     }
   }
 `;
+
+const subscription = graphql`
+  subscription DraftQuerySubscription($draftID: Int!) {
+    drafts_connection(where: { id: { _eq: $draftID } }) {
+      edges {
+        node {
+          draft_order
+          id
+          interval
+          picks
+          rounds
+          start
+        }
+      }
+    }
+  }
+`;
+
+const variables = {
+  draftID: 3,
+};
+
+requestSubscription(
+  environment, // see Environment docs
+  {
+    subscription,
+    variables,
+    // optional but recommended:
+    onCompleted: () => {
+      // server closed the subscription
+    },
+    onError: (error) => console.error(error),
+  }
+);
 
 const columns = [
   {
@@ -32,7 +83,7 @@ export function Draft() {
     <QueryRenderer
       environment={environment}
       query={DraftQuery}
-      variables={{}}
+      variables={{ draftID: 3 }}
       render={({ error, props }: { error: any; props: any }) => {
         if (error) {
           return <div>Error!</div>;
@@ -40,9 +91,10 @@ export function Draft() {
         if (!props) {
           return <div>Loading...</div>;
         }
-        const teams = props.teams.map((team: any) => ({
-          id: team.team_id,
-          ...team,
+
+        const teams = props.teams_connection.edges.map((edge: any) => ({
+          id: edge.node.team_id,
+          ...edge.node,
         }));
 
         const grid = (
@@ -55,7 +107,12 @@ export function Draft() {
           />
         );
 
-        return <div style={{ height: 400, width: "100%" }}>{grid}</div>;
+        return (
+          <div style={{ height: 400, width: "100%" }}>
+            <h2>{props.drafts_connection.edges[0].node.picks}</h2>
+            {grid}
+          </div>
+        );
       }}
     />
   );

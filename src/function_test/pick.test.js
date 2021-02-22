@@ -1,6 +1,22 @@
 import { handler } from '../../functions/pick';
+import graphql from '../../functions/graphql'
 
 jest.setTimeout(30000)
+
+afterAll(() => {
+    // reverse mutations from Pick works for ready to pick user
+    const TestMutation = `mutation DraftMutation($draftID: Int!, $picks: jsonb ) {
+        update_drafts_by_pk (
+          pk_columns: {id: $draftID}
+          _set: { picks: $picks }
+        ) {
+          id
+          picks
+        }
+      }`
+    graphql.fetchQuery(TestMutation, { draftID: 3, picks: [] })
+    graphql.fetchQuery(TestMutation, { draftID: 4, picks: ["Boston Celtics"] })
+});
 
 test('Pick errors with no parameters', async () => {
     const response = await handler();

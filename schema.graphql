@@ -4,6 +4,375 @@ schema {
   subscription: subscription_root
 }
 
+# columns and relationships of "drafts"
+type drafts implements Node {
+  draft_order(
+    # JSON select path
+    path: String
+  ): jsonb!
+  id: ID!
+  interval: Int!
+  picks(
+    # JSON select path
+    path: String
+  ): jsonb!
+  rounds: Int!
+  start: timestamptz!
+}
+
+# aggregated selection of "drafts"
+type drafts_aggregate {
+  aggregate: drafts_aggregate_fields
+  nodes: [drafts!]!
+}
+
+# aggregate fields of "drafts"
+type drafts_aggregate_fields {
+  avg: drafts_avg_fields
+  count(columns: [drafts_select_column!], distinct: Boolean): Int
+  max: drafts_max_fields
+  min: drafts_min_fields
+  stddev: drafts_stddev_fields
+  stddev_pop: drafts_stddev_pop_fields
+  stddev_samp: drafts_stddev_samp_fields
+  sum: drafts_sum_fields
+  var_pop: drafts_var_pop_fields
+  var_samp: drafts_var_samp_fields
+  variance: drafts_variance_fields
+}
+
+# order by aggregate values of table "drafts"
+input drafts_aggregate_order_by {
+  avg: drafts_avg_order_by
+  count: order_by
+  max: drafts_max_order_by
+  min: drafts_min_order_by
+  stddev: drafts_stddev_order_by
+  stddev_pop: drafts_stddev_pop_order_by
+  stddev_samp: drafts_stddev_samp_order_by
+  sum: drafts_sum_order_by
+  var_pop: drafts_var_pop_order_by
+  var_samp: drafts_var_samp_order_by
+  variance: drafts_variance_order_by
+}
+
+# append existing jsonb value of filtered columns with new jsonb value
+input drafts_append_input {
+  draft_order: jsonb
+  picks: jsonb
+}
+
+# input type for inserting array relation for remote table "drafts"
+input drafts_arr_rel_insert_input {
+  data: [drafts_insert_input!]!
+  on_conflict: drafts_on_conflict
+}
+
+# aggregate avg on columns
+type drafts_avg_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by avg() on columns of table "drafts"
+input drafts_avg_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# Boolean expression to filter rows from the table "drafts". All fields are combined with a logical 'AND'.
+input drafts_bool_exp {
+  _and: [drafts_bool_exp]
+  _not: drafts_bool_exp
+  _or: [drafts_bool_exp]
+  draft_order: jsonb_comparison_exp
+  id: Int_comparison_exp
+  interval: Int_comparison_exp
+  picks: jsonb_comparison_exp
+  rounds: Int_comparison_exp
+  start: timestamptz_comparison_exp
+}
+
+# unique or primary key constraints on table "drafts"
+enum drafts_constraint {
+  # unique or primary key constraint
+  drafts_pkey
+}
+
+# delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+input drafts_delete_at_path_input {
+  draft_order: [String]
+  picks: [String]
+}
+
+# delete the array element with specified index (negative integers count from the
+# end). throws an error if top level container is not an array
+input drafts_delete_elem_input {
+  draft_order: Int
+  picks: Int
+}
+
+# delete key/value pair or string element. key/value pairs are matched based on their key value
+input drafts_delete_key_input {
+  draft_order: String
+  picks: String
+}
+
+# input type for incrementing integer column in table "drafts"
+input drafts_inc_input {
+  id: Int
+  interval: Int
+  rounds: Int
+}
+
+# input type for inserting data into table "drafts"
+input drafts_insert_input {
+  draft_order: jsonb
+  id: Int
+  interval: Int
+  picks: jsonb
+  rounds: Int
+  start: timestamptz
+}
+
+# aggregate max on columns
+type drafts_max_fields {
+  id: Int
+  interval: Int
+  rounds: Int
+  start: timestamptz
+}
+
+# order by max() on columns of table "drafts"
+input drafts_max_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+  start: order_by
+}
+
+# aggregate min on columns
+type drafts_min_fields {
+  id: Int
+  interval: Int
+  rounds: Int
+  start: timestamptz
+}
+
+# order by min() on columns of table "drafts"
+input drafts_min_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+  start: order_by
+}
+
+# response of any mutation on the table "drafts"
+type drafts_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [drafts!]!
+}
+
+# input type for inserting object relation for remote table "drafts"
+input drafts_obj_rel_insert_input {
+  data: drafts_insert_input!
+  on_conflict: drafts_on_conflict
+}
+
+# on conflict condition type for table "drafts"
+input drafts_on_conflict {
+  constraint: drafts_constraint!
+  update_columns: [drafts_update_column!]!
+  where: drafts_bool_exp
+}
+
+# ordering options when selecting data from "drafts"
+input drafts_order_by {
+  draft_order: order_by
+  id: order_by
+  interval: order_by
+  picks: order_by
+  rounds: order_by
+  start: order_by
+}
+
+# primary key columns input for table: "drafts"
+input drafts_pk_columns_input {
+  id: Int!
+}
+
+# prepend existing jsonb value of filtered columns with new jsonb value
+input drafts_prepend_input {
+  draft_order: jsonb
+  picks: jsonb
+}
+
+# select columns of table "drafts"
+enum drafts_select_column {
+  # column name
+  draft_order
+
+  # column name
+  id
+
+  # column name
+  interval
+
+  # column name
+  picks
+
+  # column name
+  rounds
+
+  # column name
+  start
+}
+
+# input type for updating data in table "drafts"
+input drafts_set_input {
+  draft_order: jsonb
+  id: Int
+  interval: Int
+  picks: jsonb
+  rounds: Int
+  start: timestamptz
+}
+
+# aggregate stddev on columns
+type drafts_stddev_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by stddev() on columns of table "drafts"
+input drafts_stddev_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# aggregate stddev_pop on columns
+type drafts_stddev_pop_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by stddev_pop() on columns of table "drafts"
+input drafts_stddev_pop_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# aggregate stddev_samp on columns
+type drafts_stddev_samp_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by stddev_samp() on columns of table "drafts"
+input drafts_stddev_samp_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# aggregate sum on columns
+type drafts_sum_fields {
+  id: Int
+  interval: Int
+  rounds: Int
+}
+
+# order by sum() on columns of table "drafts"
+input drafts_sum_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# update columns of table "drafts"
+enum drafts_update_column {
+  # column name
+  draft_order
+
+  # column name
+  id
+
+  # column name
+  interval
+
+  # column name
+  picks
+
+  # column name
+  rounds
+
+  # column name
+  start
+}
+
+# aggregate var_pop on columns
+type drafts_var_pop_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by var_pop() on columns of table "drafts"
+input drafts_var_pop_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# aggregate var_samp on columns
+type drafts_var_samp_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by var_samp() on columns of table "drafts"
+input drafts_var_samp_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# aggregate variance on columns
+type drafts_variance_fields {
+  id: Float
+  interval: Float
+  rounds: Float
+}
+
+# order by variance() on columns of table "drafts"
+input drafts_variance_order_by {
+  id: order_by
+  interval: order_by
+  rounds: order_by
+}
+
+# A Relay Connection object on "drafts"
+type draftsConnection {
+  edges: [draftsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type draftsEdge {
+  cursor: String!
+  node: drafts!
+}
+
 # expression to compare columns of type Int. All fields are combined with logical 'AND'.
 input Int_comparison_exp {
   _eq: Int
@@ -17,8 +386,46 @@ input Int_comparison_exp {
   _nin: [Int!]
 }
 
+scalar jsonb
+
+# expression to compare columns of type jsonb. All fields are combined with logical 'AND'.
+input jsonb_comparison_exp {
+  # is the column contained in the given json value
+  _contained_in: jsonb
+
+  # does the column contain the given json value at the top level
+  _contains: jsonb
+  _eq: jsonb
+  _gt: jsonb
+  _gte: jsonb
+
+  # does the string exist as a top-level key in the column
+  _has_key: String
+
+  # do all of these strings exist as top-level keys in the column
+  _has_keys_all: [String!]
+
+  # do any of these strings exist as top-level keys in the column
+  _has_keys_any: [String!]
+  _in: [jsonb!]
+  _is_null: Boolean
+  _lt: jsonb
+  _lte: jsonb
+  _neq: jsonb
+  _nin: [jsonb!]
+}
+
 # mutation root
 type mutation_root {
+  # delete data from the table: "drafts"
+  delete_drafts(
+    # filter the rows which have to be deleted
+    where: drafts_bool_exp!
+  ): drafts_mutation_response
+
+  # delete single row from the table: "drafts"
+  delete_drafts_by_pk(id: Int!): drafts
+
   # delete data from the table: "teams"
   delete_teams(
     # filter the rows which have to be deleted
@@ -27,6 +434,24 @@ type mutation_root {
 
   # delete single row from the table: "teams"
   delete_teams_by_pk(team_id: Int!): teams
+
+  # insert data into the table: "drafts"
+  insert_drafts(
+    # the rows to be inserted
+    objects: [drafts_insert_input!]!
+
+    # on conflict condition
+    on_conflict: drafts_on_conflict
+  ): drafts_mutation_response
+
+  # insert a single row into the table: "drafts"
+  insert_drafts_one(
+    # the row to be inserted
+    object: drafts_insert_input!
+
+    # on conflict condition
+    on_conflict: drafts_on_conflict
+  ): drafts
 
   # insert data into the table: "teams"
   insert_teams(
@@ -45,6 +470,60 @@ type mutation_root {
     # on conflict condition
     on_conflict: teams_on_conflict
   ): teams
+
+  # update data of the table: "drafts"
+  update_drafts(
+    # append existing jsonb value of filtered columns with new jsonb value
+    _append: drafts_append_input
+
+    # delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    _delete_at_path: drafts_delete_at_path_input
+
+    # delete the array element with specified index (negative integers count from
+    # the end). throws an error if top level container is not an array
+    _delete_elem: drafts_delete_elem_input
+
+    # delete key/value pair or string element. key/value pairs are matched based on their key value
+    _delete_key: drafts_delete_key_input
+
+    # increments the integer columns with given value of the filtered values
+    _inc: drafts_inc_input
+
+    # prepend existing jsonb value of filtered columns with new jsonb value
+    _prepend: drafts_prepend_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: drafts_set_input
+
+    # filter the rows which have to be updated
+    where: drafts_bool_exp!
+  ): drafts_mutation_response
+
+  # update single row of the table: "drafts"
+  update_drafts_by_pk(
+    # append existing jsonb value of filtered columns with new jsonb value
+    _append: drafts_append_input
+
+    # delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    _delete_at_path: drafts_delete_at_path_input
+
+    # delete the array element with specified index (negative integers count from
+    # the end). throws an error if top level container is not an array
+    _delete_elem: drafts_delete_elem_input
+
+    # delete key/value pair or string element. key/value pairs are matched based on their key value
+    _delete_key: drafts_delete_key_input
+
+    # increments the integer columns with given value of the filtered values
+    _inc: drafts_inc_input
+
+    # prepend existing jsonb value of filtered columns with new jsonb value
+    _prepend: drafts_prepend_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: drafts_set_input
+    pk_columns: drafts_pk_columns_input!
+  ): drafts
 
   # update data of the table: "teams"
   update_teams(
@@ -69,6 +548,12 @@ type mutation_root {
   ): teams
 }
 
+# An object with globally unique ID
+interface Node {
+  # A globally unique identifier
+  id: ID!
+}
+
 # column ordering options
 enum order_by {
   # in the ascending order, nulls last
@@ -90,46 +575,52 @@ enum order_by {
   desc_nulls_last
 }
 
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
 # query root
 type query_root {
+  # fetch data from the table: "drafts"
+  drafts_connection(
+    after: String
+    before: String
+
+    # distinct select on columns
+    distinct_on: [drafts_select_column!]
+    first: Int
+    last: Int
+
+    # sort the rows by one or more columns
+    order_by: [drafts_order_by!]
+
+    # filter the rows returned
+    where: drafts_bool_exp
+  ): draftsConnection!
+  node(
+    # A globally unique id
+    id: ID!
+  ): Node
+
   # fetch data from the table: "teams"
-  teams(
+  teams_connection(
+    after: String
+    before: String
+
     # distinct select on columns
     distinct_on: [teams_select_column!]
-
-    # limit the number of rows returned
-    limit: Int
-
-    # skip the first n rows. Use only with order_by
-    offset: Int
+    first: Int
+    last: Int
 
     # sort the rows by one or more columns
     order_by: [teams_order_by!]
 
     # filter the rows returned
     where: teams_bool_exp
-  ): [teams!]!
-
-  # fetch aggregated fields from the table: "teams"
-  teams_aggregate(
-    # distinct select on columns
-    distinct_on: [teams_select_column!]
-
-    # limit the number of rows returned
-    limit: Int
-
-    # skip the first n rows. Use only with order_by
-    offset: Int
-
-    # sort the rows by one or more columns
-    order_by: [teams_order_by!]
-
-    # filter the rows returned
-    where: teams_bool_exp
-  ): teams_aggregate!
-
-  # fetch data from the table: "teams" using primary key columns
-  teams_by_pk(team_id: Int!): teams
+  ): teamsConnection!
 }
 
 # expression to compare columns of type String. All fields are combined with logical 'AND'.
@@ -153,48 +644,48 @@ input String_comparison_exp {
 
 # subscription root
 type subscription_root {
+  # fetch data from the table: "drafts"
+  drafts_connection(
+    after: String
+    before: String
+
+    # distinct select on columns
+    distinct_on: [drafts_select_column!]
+    first: Int
+    last: Int
+
+    # sort the rows by one or more columns
+    order_by: [drafts_order_by!]
+
+    # filter the rows returned
+    where: drafts_bool_exp
+  ): draftsConnection!
+  node(
+    # A globally unique id
+    id: ID!
+  ): Node
+
   # fetch data from the table: "teams"
-  teams(
+  teams_connection(
+    after: String
+    before: String
+
     # distinct select on columns
     distinct_on: [teams_select_column!]
-
-    # limit the number of rows returned
-    limit: Int
-
-    # skip the first n rows. Use only with order_by
-    offset: Int
+    first: Int
+    last: Int
 
     # sort the rows by one or more columns
     order_by: [teams_order_by!]
 
     # filter the rows returned
     where: teams_bool_exp
-  ): [teams!]!
-
-  # fetch aggregated fields from the table: "teams"
-  teams_aggregate(
-    # distinct select on columns
-    distinct_on: [teams_select_column!]
-
-    # limit the number of rows returned
-    limit: Int
-
-    # skip the first n rows. Use only with order_by
-    offset: Int
-
-    # sort the rows by one or more columns
-    order_by: [teams_order_by!]
-
-    # filter the rows returned
-    where: teams_bool_exp
-  ): teams_aggregate!
-
-  # fetch data from the table: "teams" using primary key columns
-  teams_by_pk(team_id: Int!): teams
+  ): teamsConnection!
 }
 
 # columns and relationships of "teams"
-type teams {
+type teams implements Node {
+  id: ID!
   logo: String!
   name: String!
   team_id: Int!
@@ -441,5 +932,31 @@ type teams_variance_fields {
 # order by variance() on columns of table "teams"
 input teams_variance_order_by {
   team_id: order_by
+}
+
+# A Relay Connection object on "teams"
+type teamsConnection {
+  edges: [teamsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type teamsEdge {
+  cursor: String!
+  node: teams!
+}
+
+scalar timestamptz
+
+# expression to compare columns of type timestamptz. All fields are combined with logical 'AND'.
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
 }
 
