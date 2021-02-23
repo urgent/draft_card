@@ -16,6 +16,10 @@ type drafts implements Node {
     # JSON select path
     path: String
   ): jsonb!
+  picks_timestamps(
+    # JSON select path
+    path: String
+  ): jsonb
   rounds: Int!
   start: timestamptz!
 }
@@ -60,6 +64,7 @@ input drafts_aggregate_order_by {
 input drafts_append_input {
   draft_order: jsonb
   picks: jsonb
+  picks_timestamps: jsonb
 }
 
 # input type for inserting array relation for remote table "drafts"
@@ -91,6 +96,7 @@ input drafts_bool_exp {
   id: Int_comparison_exp
   interval: Int_comparison_exp
   picks: jsonb_comparison_exp
+  picks_timestamps: jsonb_comparison_exp
   rounds: Int_comparison_exp
   start: timestamptz_comparison_exp
 }
@@ -105,6 +111,7 @@ enum drafts_constraint {
 input drafts_delete_at_path_input {
   draft_order: [String]
   picks: [String]
+  picks_timestamps: [String]
 }
 
 # delete the array element with specified index (negative integers count from the
@@ -112,12 +119,14 @@ input drafts_delete_at_path_input {
 input drafts_delete_elem_input {
   draft_order: Int
   picks: Int
+  picks_timestamps: Int
 }
 
 # delete key/value pair or string element. key/value pairs are matched based on their key value
 input drafts_delete_key_input {
   draft_order: String
   picks: String
+  picks_timestamps: String
 }
 
 # input type for incrementing integer column in table "drafts"
@@ -133,6 +142,7 @@ input drafts_insert_input {
   id: Int
   interval: Int
   picks: jsonb
+  picks_timestamps: jsonb
   rounds: Int
   start: timestamptz
 }
@@ -197,6 +207,7 @@ input drafts_order_by {
   id: order_by
   interval: order_by
   picks: order_by
+  picks_timestamps: order_by
   rounds: order_by
   start: order_by
 }
@@ -210,6 +221,7 @@ input drafts_pk_columns_input {
 input drafts_prepend_input {
   draft_order: jsonb
   picks: jsonb
+  picks_timestamps: jsonb
 }
 
 # select columns of table "drafts"
@@ -227,6 +239,9 @@ enum drafts_select_column {
   picks
 
   # column name
+  picks_timestamps
+
+  # column name
   rounds
 
   # column name
@@ -239,6 +254,7 @@ input drafts_set_input {
   id: Int
   interval: Int
   picks: jsonb
+  picks_timestamps: jsonb
   rounds: Int
   start: timestamptz
 }
@@ -312,6 +328,9 @@ enum drafts_update_column {
 
   # column name
   picks
+
+  # column name
+  picks_timestamps
 
   # column name
   rounds

@@ -1,4 +1,4 @@
-import { calculate } from './Draft'
+import { calculate, timer } from './Draft'
 test('Pick calculates correctly from draft order and rounds', async () => {
     expect(calculate({ draft_order: ["AAA", "BBB"], rounds: 0, picks: [] })).toEqual([]);
     expect(calculate({ draft_order: [], rounds: 1, picks: [] })).toEqual([]);
@@ -17,4 +17,8 @@ test('Pick calculates correctly from draft order and rounds', async () => {
 test('Pick calculates current draft pick correctly', async () => {
     expect(calculate({ draft_order: ["AAA", "BBB", "CCC"], rounds: 1, picks: ["Boston Celtics", "Brooklyn Nets"] })).toEqual(["CCC"])
     expect(calculate({ draft_order: ["AAA", "BBB", "CCC"], rounds: 2, picks: ["Boston Celtics", "Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors"] })).toEqual(["CCC"])
+})
+
+test('Pick timer works with correct values', async () => {
+    expect(timer({ picks_timestamps: [Date.now() - (10 * 1000)], interval: 30 })).toEqual(20000)
 })

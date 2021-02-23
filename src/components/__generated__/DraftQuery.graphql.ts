@@ -26,6 +26,7 @@ export type DraftQueryResponse = {
                 readonly picks: unknown;
                 readonly rounds: number;
                 readonly start: unknown;
+                readonly picks_timestamps: unknown | null;
             };
         }>;
     };
@@ -60,6 +61,7 @@ query DraftQuery(
         picks
         rounds
         start
+        picks_timestamps
       }
     }
   }
@@ -214,6 +216,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "start",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "picks_timestamps",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -243,14 +252,14 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "01303e73e49d57eea261390c59a6e140",
+    "cacheID": "75b0fbbfb8d70d0ec5760aa6fcb6c311",
     "id": null,
     "metadata": {},
     "name": "DraftQuery",
     "operationKind": "query",
-    "text": "query DraftQuery(\n  $draftID: Int!\n) {\n  teams_connection {\n    edges {\n      node {\n        logo\n        name\n        team_id\n        id\n      }\n    }\n  }\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n      }\n    }\n  }\n}\n"
+    "text": "query DraftQuery(\n  $draftID: Int!\n) {\n  teams_connection {\n    edges {\n      node {\n        logo\n        name\n        team_id\n        id\n      }\n    }\n  }\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n        picks_timestamps\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '5b6dfcf441540611edf88f8294ade751';
+(node as any).hash = 'ca86e389fc2cc4b26180753978dd6df6';
 export default node;

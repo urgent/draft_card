@@ -16,6 +16,7 @@ export type DraftQuerySubscriptionResponse = {
                 readonly picks: unknown;
                 readonly rounds: number;
                 readonly start: unknown;
+                readonly picks_timestamps: unknown | null;
             };
         }>;
     };
@@ -40,6 +41,7 @@ subscription DraftQuerySubscription(
         picks
         rounds
         start
+        picks_timestamps
       }
     }
   }
@@ -138,6 +140,13 @@ v1 = [
                 "kind": "ScalarField",
                 "name": "start",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "picks_timestamps",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -167,14 +176,14 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "e82e9e0dc38ac0380f15fcb8ddfd84e6",
+    "cacheID": "5066fbc89bb819682ea3afdc2b7b1378",
     "id": null,
     "metadata": {},
     "name": "DraftQuerySubscription",
     "operationKind": "subscription",
-    "text": "subscription DraftQuerySubscription(\n  $draftID: Int!\n) {\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n      }\n    }\n  }\n}\n"
+    "text": "subscription DraftQuerySubscription(\n  $draftID: Int!\n) {\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n        picks_timestamps\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '79bcdca607917a3fe1826f6f8917b1e3';
+(node as any).hash = 'e0542653d926b86033babace345ea9bf';
 export default node;

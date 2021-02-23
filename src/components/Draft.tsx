@@ -26,6 +26,7 @@ const DraftQuery = graphql`
           picks
           rounds
           start
+          picks_timestamps
         }
       }
     }
@@ -43,6 +44,7 @@ const subscription = graphql`
           picks
           rounds
           start
+          picks_timestamps
         }
       }
     }
@@ -96,6 +98,21 @@ export function calculate({
   return result.slice(Math.max(picks.length, 0), picks.length + 4);
 }
 
+export function timer({
+  interval,
+  picks_timestamps,
+}: {
+  interval: number;
+  picks_timestamps: number[];
+}) {
+  const now = Date.now();
+  const res = picks_timestamps.slice(-1)[0] + interval * 1000 - now;
+  if (res <= 0) {
+    return interval * 1000;
+  }
+  return res;
+}
+
 export function Draft({ draft, user }: { draft: number; user: string }) {
   return (
     <QueryRenderer
@@ -121,7 +138,7 @@ export function Draft({ draft, user }: { draft: number; user: string }) {
             columns={columns}
             pageSize={5}
             checkboxSelection
-            rowHeight={78}
+            rowHeight={64}
           />
         );
 
@@ -131,9 +148,17 @@ export function Draft({ draft, user }: { draft: number; user: string }) {
           rounds: draft.rounds,
           picks: draft.picks,
         });
+
         return (
-          <div style={{ height: 400, width: "100%" }}>
-            <Picks steps={steps} user={user} />
+          <div style={{ height: 600, width: "100%" }}>
+            <Picks
+              steps={steps}
+              user={user}
+              interval={timer({
+                interval: draft.interval,
+                picks_timestamps: draft.picks_timestamps,
+              })}
+            />
             {grid}
           </div>
         );

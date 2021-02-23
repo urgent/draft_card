@@ -4,7 +4,15 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 
-export function Picks({ steps, user }: { steps: string[]; user: string }) {
+export function Picks({
+  steps,
+  user,
+  interval,
+}: {
+  steps: string[];
+  user: string;
+  interval: number;
+}) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   // Similar to componentDidMount and componentDidUpdate:
@@ -16,7 +24,7 @@ export function Picks({ steps, user }: { steps: string[]; user: string }) {
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
-    }, 5000);
+    }, interval);
   });
 
   return (
