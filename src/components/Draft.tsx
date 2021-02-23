@@ -82,13 +82,18 @@ const columns = [
 export function calculate({
   draft_order,
   rounds,
+  picks,
 }: {
   draft_order: string[];
   rounds: number;
+  picks: string[];
 }) {
+  // create array from rounds and draft_order
   const arr = Array.from({ length: rounds }, (_, idx) => draft_order);
+  // flatten two dimensional array
   const result = [].concat.apply([], arr as any);
-  return result;
+  // slice array, too many items slow the render
+  return result.slice(Math.max(picks.length - 1, 0), picks.length + 4);
 }
 
 export function Draft() {
@@ -120,12 +125,15 @@ export function Draft() {
           />
         );
 
+        const draft = props.drafts_connection.edges[0].node;
+
         return (
           <div style={{ height: 400, width: "100%" }}>
             <Picks
               steps={calculate({
-                draft_order: props.drafts_connection.edges[0].node.draft_order,
-                rounds: props.drafts_connection.edges[0].node.rounds,
+                draft_order: draft.draft_order,
+                rounds: draft.rounds,
+                picks: draft.picks,
               })}
             />
             {grid}
