@@ -3,26 +3,31 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 
 export function Picks({ steps, user }: { steps: string[]; user: string }) {
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // Similar to componentDidMount and componentDidUpdate:
+  React.useEffect(() => {
+    setTimeout(() => {
+      const increment = activeStep + 1;
+      if (increment > steps.length) {
+        setActiveStep(0);
+      } else {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+    }, 5000);
+  });
 
   return (
     <div>
-      <button disabled={steps[activeStep] !== user}>Pick</button>
+      <Button
+        variant="contained"
+        color="primary"
+        disabled={steps[activeStep] !== user}
+      >
+        Pick
+      </Button>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>
@@ -30,25 +35,6 @@ export function Picks({ steps, user }: { steps: string[]; user: string }) {
           </Step>
         ))}
       </Stepper>
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography>All steps completed</Typography>
-            <Button onClick={handleReset}>Reset</Button>
-          </div>
-        ) : (
-          <div>
-            <div>
-              <Button disabled={activeStep === 0} onClick={handleBack}>
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
