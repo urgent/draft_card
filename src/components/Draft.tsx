@@ -3,6 +3,7 @@ import { graphql } from "babel-plugin-relay/macro";
 import { QueryRenderer, requestSubscription } from "react-relay";
 import { environment } from "../relay/Environment";
 import { DataGrid, ValueFormatterParams } from "@material-ui/data-grid";
+import { Picks } from "./Pick";
 
 const DraftQuery = graphql`
   query DraftQuery($draftID: Int!) {
@@ -78,6 +79,18 @@ const columns = [
   { field: "name", headerName: "Team", width: 130 },
 ];
 
+export function calculate({
+  draft_order,
+  rounds,
+}: {
+  draft_order: string[];
+  rounds: number;
+}) {
+  const arr = Array.from({ length: rounds }, (_, idx) => draft_order);
+  const result = [].concat.apply([], arr as any);
+  return result;
+}
+
 export function Draft() {
   return (
     <QueryRenderer
@@ -109,7 +122,12 @@ export function Draft() {
 
         return (
           <div style={{ height: 400, width: "100%" }}>
-            <h2>{props.drafts_connection.edges[0].node.picks}</h2>
+            <Picks
+              steps={calculate({
+                draft_order: props.drafts_connection.edges[0].node.draft_order,
+                rounds: props.drafts_connection.edges[0].node.rounds,
+              })}
+            />
             {grid}
           </div>
         );
