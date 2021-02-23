@@ -8,7 +8,7 @@ function App() {
         <h1>Draft Card</h1>
       </header>
       <main>
-        <Draft />
+        <Draft draft={3} user="BBB" />
       </main>
     </div>
   );

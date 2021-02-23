@@ -13,3 +13,8 @@ test('Pick calculates correctly from draft order and rounds', async () => {
     expect(calculate({ draft_order: ["AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ"], rounds: 1, picks: [] })).toEqual(["AAA", "BBB", "CCC", "DDD"]);
     expect(calculate({ draft_order: ["AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ"], rounds: 2, picks: [] })).toEqual(["AAA", "BBB", "CCC", "DDD"]);
 })
+
+test('Pick calculates current draft pick correctly', async () => {
+    expect(calculate({ draft_order: ["AAA", "BBB", "CCC"], rounds: 1, picks: ["Boston Celtics", "Brooklyn Nets"] })).toEqual(["CCC"])
+    expect(calculate({ draft_order: ["AAA", "BBB", "CCC"], rounds: 2, picks: ["Boston Celtics", "Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors"] })).toEqual(["CCC"])
+})

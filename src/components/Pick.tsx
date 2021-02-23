@@ -5,7 +5,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-export function Picks({ steps }: { steps: string[] }) {
+export function Picks({ steps, user }: { steps: string[]; user: string }) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -22,6 +22,7 @@ export function Picks({ steps }: { steps: string[] }) {
 
   return (
     <div>
+      <button disabled={steps[activeStep] !== user}>Pick</button>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>

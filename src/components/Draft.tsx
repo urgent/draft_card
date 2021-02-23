@@ -93,15 +93,15 @@ export function calculate({
   // flatten two dimensional array
   const result = [].concat.apply([], arr as any);
   // slice array, too many items slow the render
-  return result.slice(Math.max(picks.length - 1, 0), picks.length + 4);
+  return result.slice(Math.max(picks.length, 0), picks.length + 4);
 }
 
-export function Draft() {
+export function Draft({ draft, user }: { draft: number; user: string }) {
   return (
     <QueryRenderer
       environment={environment}
       query={DraftQuery}
-      variables={{ draftID: 3 }}
+      variables={{ draftID: draft }}
       render={({ error, props }: { error: any; props: any }) => {
         if (error) {
           return <div>Error!</div>;
@@ -126,16 +126,14 @@ export function Draft() {
         );
 
         const draft = props.drafts_connection.edges[0].node;
-
+        const steps = calculate({
+          draft_order: draft.draft_order,
+          rounds: draft.rounds,
+          picks: draft.picks,
+        });
         return (
           <div style={{ height: 400, width: "100%" }}>
-            <Picks
-              steps={calculate({
-                draft_order: draft.draft_order,
-                rounds: draft.rounds,
-                picks: draft.picks,
-              })}
-            />
+            <Picks steps={steps} user={user} />
             {grid}
           </div>
         );
