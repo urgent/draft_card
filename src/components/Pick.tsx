@@ -34,7 +34,7 @@ export function Picks({
         color="primary"
         disabled={steps[activeStep] !== user}
       >
-        Pick
+        Pick ... <Timer start={interval} />
       </Button>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
@@ -45,4 +45,14 @@ export function Picks({
       </Stepper>
     </div>
   );
+}
+
+export function Timer({ start }: { start: number }) {
+  const [time, setTime] = React.useState(start);
+  React.useEffect(() => {
+    setTimeout(() => {
+      setTime(time - 1000);
+    }, 1000);
+  });
+  return <span>{time / 1000}</span>;
 }
