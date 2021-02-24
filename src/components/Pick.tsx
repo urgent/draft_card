@@ -14,17 +14,23 @@ export function Picks({
   interval: number;
 }) {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [time, setTime] = React.useState(interval);
 
   // Similar to componentDidMount and componentDidUpdate:
   React.useEffect(() => {
     setTimeout(() => {
-      const increment = activeStep + 1;
-      if (increment > steps.length) {
-        setActiveStep(0);
+      if (time <= 0) {
+        setTime(interval);
+        const increment = activeStep + 1;
+        if (increment >= steps.length) {
+          setActiveStep(0);
+        } else {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
       } else {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setTime(time - 1000);
       }
-    }, interval);
+    }, 1000);
   });
 
   return (
@@ -34,25 +40,15 @@ export function Picks({
         color="primary"
         disabled={steps[activeStep] !== user}
       >
-        Pick ... <Timer start={interval} />
+        Pick ... {time / 1000}
       </Button>
       <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
+        {steps.map((label, index) => (
+          <Step key={`${label}-${index}`}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
     </div>
   );
-}
-
-export function Timer({ start }: { start: number }) {
-  const [time, setTime] = React.useState(start);
-  React.useEffect(() => {
-    setTimeout(() => {
-      setTime(time - 1000);
-    }, 1000);
-  });
-  return <span>{time / 1000}</span>;
 }
