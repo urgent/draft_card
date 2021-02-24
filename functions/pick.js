@@ -86,7 +86,7 @@ function validatePayload(payload) {
     return false;
   }
   // draft has interval
-  if (payload.data.drafts_connection.edges[0].node.interval <= 15) {
+  if (payload.data.drafts_connection.edges[0].node.interval < 15) {
     return false;
   }
   // draft has rounds

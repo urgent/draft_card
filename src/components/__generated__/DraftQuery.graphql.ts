@@ -14,6 +14,7 @@ export type DraftQueryResponse = {
                 readonly name: string;
                 readonly team_id: number;
                 readonly id: string;
+                readonly rank: number | null;
             };
         }>;
     };
@@ -42,13 +43,14 @@ export type DraftQuery = {
 query DraftQuery(
   $draftID: Int!
 ) {
-  teams_connection {
+  teams_connection(order_by: {rank: asc}) {
     edges {
       node {
         logo
         name
         team_id
         id
+        rank
       }
     }
   }
@@ -86,7 +88,15 @@ v1 = {
 v2 = [
   {
     "alias": null,
-    "args": null,
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "order_by",
+        "value": {
+          "rank": "asc"
+        }
+      }
+    ],
     "concreteType": "teamsConnection",
     "kind": "LinkedField",
     "name": "teams_connection",
@@ -129,7 +139,14 @@ v2 = [
                 "name": "team_id",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "rank",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           }
@@ -137,7 +154,7 @@ v2 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
+    "storageKey": "teams_connection(order_by:{\"rank\":\"asc\"})"
   },
   {
     "alias": null,
@@ -252,14 +269,14 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "75b0fbbfb8d70d0ec5760aa6fcb6c311",
+    "cacheID": "d0bac38862abbb1d5d3e74202b8fbf6c",
     "id": null,
     "metadata": {},
     "name": "DraftQuery",
     "operationKind": "query",
-    "text": "query DraftQuery(\n  $draftID: Int!\n) {\n  teams_connection {\n    edges {\n      node {\n        logo\n        name\n        team_id\n        id\n      }\n    }\n  }\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n        picks_timestamps\n      }\n    }\n  }\n}\n"
+    "text": "query DraftQuery(\n  $draftID: Int!\n) {\n  teams_connection(order_by: {rank: asc}) {\n    edges {\n      node {\n        logo\n        name\n        team_id\n        id\n        rank\n      }\n    }\n  }\n  drafts_connection(where: {id: {_eq: $draftID}}) {\n    edges {\n      node {\n        draft_order\n        id\n        interval\n        picks\n        rounds\n        start\n        picks_timestamps\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'ca86e389fc2cc4b26180753978dd6df6';
+(node as any).hash = '5609b491e53c9884c00ce5acdefe7567';
 export default node;

@@ -7,13 +7,14 @@ import { Picks } from "./Pick";
 
 const DraftQuery = graphql`
   query DraftQuery($draftID: Int!) {
-    teams_connection {
+    teams_connection(order_by: { rank: asc }) {
       edges {
         node {
           logo
           name
           team_id
           id
+          rank
         }
       }
     }
