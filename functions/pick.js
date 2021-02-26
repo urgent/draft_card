@@ -10,29 +10,34 @@ const DraftQuery = `query DraftQuery($draftID:Int!) {
         interval
         rounds
         picks
+        picks_users
+        picks_timestamps
       }
     }
   }
-  teams_connection {
+  teams_connection(order_by: { rank: asc }) {
     edges {
       node {
         logo
         name
         team_id
         id
+        rank
       }
     }
   }
 }`;
 
 const DraftMutation = `
-mutation DraftMutation($draftID: Int!, $picks: jsonb ) {
+mutation DraftMutation($draftID: Int!, $picks: jsonb, $picks_users: jsonb, $picks_timestamps:jsonb ) {
   update_drafts_by_pk (
     pk_columns: {id: $draftID}
-    _set: { picks: $picks }
+    _set: { picks: $picks, picks_users: $picks_users, picks_timestamps: $picks_timestamps }
   ) {
     id
     picks
+    picks_users
+    picks_timestamps
   }
 }
 `;
@@ -103,10 +108,41 @@ function processDraft(data) {
   draft.maxPicks = draft.countPlayers * draft.rounds;
   // picks can be made early.
   draft.maxSeconds = draft.maxPicks * draft.interval;
-  draft.validatedOn = Math.floor(new Date().getTime() / 1000);
+  draft.validatedOn = Math.floor(Date.now() / 1000);
   draft.teamsAvailable = data.teams_connection.edges.map(edge => edge.node.name);
-  draft.currentPickIndex = draft.countPicks % draft.countPlayers;
+  draft.timestamp = Math.floor(new Date(draft.start).getTime() / 1000)
+  draft.maxEnding = draft.timestamp + draft.maxSeconds;
+
+
+  if (draft.picks_timestamps.length === 0) {
+    draft.sinceLastPick = 0;
+  } else {
+    draft.sinceLastPick = draft.validatedOn - Math.floor(draft.picks_timestamps.slice(-1)[0] / 1000);
+  }
+
+  const difference = draft.validatedOn - draft.timestamp;
+  draft.intervalFromStart = Math.floor(difference / draft.interval)
+  draft.intervalFromLastPick = Math.floor(draft.sinceLastPick / draft.interval)
+
+  // interval from start means nothing, users can pick early
+  // get draft order of last pick
+  if (draft.picks_users.length === 0) {
+    draft.lastPickIndex = 0;
+    draft.currentPickIndex = 0;
+  } else {
+    draft.lastPickIndex = draft.draft_order.indexOf(draft.picks_users.slice(-1)[0])
+    draft.currentPickIndex = (draft.lastPickIndex + draft.intervalFromLastPick + 1) % draft.countPlayers;
+  }
+  /*
+    current pick is:
+    draft order of last pick
+    + amount of picks skipped
+    + 1 to advance
+  */
   draft.currentUser = draft.draft_order[draft.currentPickIndex]
+
+  // need to subtract 1, for this interval
+  draft.skippedCount = Math.floor(draft.sinceLastPick / draft.interval)
   return draft;
 }
 
@@ -140,21 +176,40 @@ function authorize(event, draft) {
   return true;
 }
 
-function processTimestamps(draft) {
-  draft.timestamp = Math.round(new Date(draft.start).getTime() / 1000)
-  draft.maxEnding = draft.timestamp + draft.maxSeconds;
-  return draft;
-}
-
 function validateTimestamps(draft) {
   // smoke test, older than 2020
   if (draft.timestamp < 1577854800) {
     return false;
   }
-  if (draft.timestamp < draft.validatedOn) {
+  /* if "validatedOn", or when this request was made,
+     is less than 
+     "timestamp", or when this draft starts
+     the draft hasn't begun yet
+  */
+  if (draft.validatedOn < draft.timestamp) {
+    return false;
+  }
+  // request made later than it's possible for draft to last
+  // maxEnding is max number of picks * interval
+  if (draft.validatedOn > draft.maxEnding) {
     return false;
   }
   return true;
+}
+
+function processSkips(draft) {
+  // get highest ranked team not drafted
+  const teams = draft.teamsAvailable.filter((team) => !draft.picks.includes(team))
+  if (draft.skippedCount > 0) {
+    for (let i = 0; i < draft.skippedCount; i++) {
+      const skipIndex = (draft.lastPickIndex + 1) % draft.countPlayers;
+      const user = draft.draft_order[skipIndex]
+      draft.picks = [...draft.picks, teams.shift()];
+      draft.picks_timestamps = [...draft.picks_timestamps, Date.now()]
+      draft.picks_users = [...draft.picks_users, user]
+    }
+  }
+  return draft;
 }
 
 exports.handler = async function (event, context) {
@@ -182,6 +237,8 @@ exports.handler = async function (event, context) {
     };
   }
 
+  draft = processSkips(draft)
+
   if (!authenticate(event, draft)) {
     return {
       statusCode: 500,
@@ -196,7 +253,6 @@ exports.handler = async function (event, context) {
     };
   }
 
-  draft = processTimestamps(draft);
   if (!validateTimestamps(draft)) {
     return {
       statusCode: 500,
@@ -205,7 +261,7 @@ exports.handler = async function (event, context) {
   }
 
 
-  const mutation = await graphql.fetchQuery(DraftMutation, { draftID: parseInt(event.body.draft), picks: [...draft.picks, event.body.team] })
+  const mutation = await graphql.fetchQuery(DraftMutation, { draftID: parseInt(event.body.draft), picks: [...draft.picks, event.body.team], picks_users: [...draft.picks_users, event.body.username], picks_timestamps: [...draft.picks_timestamps, Date.now()] })
   return {
     statusCode: 200,
     body: JSON.stringify({ data: mutation.data.update_drafts_by_pk })
